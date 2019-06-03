@@ -132,6 +132,8 @@ arima = auto.arima(model.ts, D=1)
 result <- forecast(arima, h=16*24) #16days*24h
 accuracy(result, valid.df$Volume.KRW) #MAPE - mean absolute percantage error 1.92% 4.07% 
 
+#Can find frequency
+stl(model.ts, "periodic")
 plot(result) 
 
 #Fitting validation set by using Arima with the model created from above data 
@@ -140,6 +142,22 @@ fittest = Arima(valid.ts, model = arima)
 accuracy(fittest) #Gives Error of 2.91% and Mean Absolute Scaled Error (MASE = 0.59)
 
 plot(fittest)
+
+#
+startDate = as.POSIXct("2019-02-01");
+endDate = as.POSIXct("2019-04-16");
+all_dates = seq(startDate, endDate, 3600);
+
+for (j in 1:length(all_dates)) {
+  filterdate = all_dates[j];
+  all.df = subset(bitcoin.df, bitcoin.df$Date %in% all_dates)
+}
+
+all.ts <- ts(model.df$Volume.KRW, frequency = 24)
+lines(all.ts)
+
+library(zoom)
+zm()
 
 #Now prediction for few dates ahed needed
 
